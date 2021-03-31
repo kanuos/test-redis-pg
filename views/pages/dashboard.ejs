@@ -1,0 +1,99 @@
+<%- include('../partials/head') %>
+<body class="bg-gradient-to-br from-pink-600 to-gray-700 font-text flex flex-col min-h-screen">
+    <nav class="w-5/6 mx-auto my-3 max-w-xl flex items-center justify-end">
+        <a href="/logout" class="flex items-center justify-center text-xs text-white capitalize md:ml-4">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            <span class="ml-1">logout</span>
+        </a>
+    </nav>
+    <form action="/api" method="post" class="mt-6 mb-2 w-5/6 mx-auto max-w-xl" autocomplete="off">
+        <h1 class="text-2xl uppercase font-light text-white text-center">
+            write todo
+        </h1>
+        <section class="flex flex-col my-2">
+            <label 
+                class="text-gray-300 text-sm capitalize mb-0.5"
+                for="title">
+                title
+            </label>
+            <input 
+                class="p-2 outline-none focus:outline-none rounded-sm shadow focus:shadow-2xl focus:scale-x-105 transform transition-all"
+                placeholder="Your User Name"
+                type="text" 
+                autocomplete="off"
+                name="title" 
+                id="title">
+        </section>
+        <section class="flex flex-col my-2">
+            <label 
+                class="text-gray-300 text-sm capitalize mb-0.5"
+                for="content">
+                content
+            </label>
+            <textarea
+                class="p-2 outline-none focus:outline-none rounded-sm shadow focus:shadow-2xl focus:scale-x-105 transform transition-all resize-none h-40"
+                placeholder="Your User Name"
+                autocomplete="off"
+                maxlength="300"
+                name="content" 
+                id="content"></textarea>
+        </section>
+        <section class="flex items-center justify-center">
+            <button type="submit" class="my-4 p-3 w-1/2 max-w-xs text-white font-semibold uppercase text-xs bg-black tracking-wider outline-none focus:outline-none shadow hover:shadow-lg transition-all hover-translate-y-px hover:bg-white hover:text-black rounded-sm flex items-center justify-center">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span class="ml-1">post entry</span>
+            </button>
+        </section>
+    </form>
+    
+    <!-- tasks go here -->
+    <% if (articles.length > 0) {%>
+    <h2 class="text-xl mt-4 border-b border-gray-100 mx-auto w-max text-gray-200 font-light capitalize">
+        my tasks (<%= articles.length %>)
+    </h2>
+    <section class="w-5/6 mx-auto pb-8 grid grid-cols-1 md:w-11/12 md:justify-start lg:grid-cols-2 xl:grid-cols-3">
+
+        <% for(let article of articles ) { %>
+        <article class="relative my-6 w-full max-w-md bg-gray-300 rounded hover:scale-105 transition-all transform hover:shadow-lg md:mx-4 grid grid-flow-row overflow-hidden">
+            <section class="w-11/12 mx-auto py-2 flex items-center justify-between row-start-1 row-end-2">
+                <strong class="text-sm text-pink-600">
+                    <%= article.title %>
+                </strong>
+                <span class="text-sm text-pink-700">
+                    <%= article.timestamp %>
+                </span>
+            </section>
+            <section class="w-full bg-gradient-to-r from-white to-gray-50 h-full row-start-2">
+                <p class="p-2 text-center italic text-sm">
+                    <%= article.content %>
+                </p>
+            </section>
+            <section class="row-span-end py-2 w-full flex items-center justify-center bg-white">
+                <button class="toggleArticleMenu animate-bounce outline-none focus:outline-none hover:text-pink-600 text-gray-500">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11l7-7 7 7M5 19l7-7 7 7"></path></svg>
+                </button>
+            </section>
+            <div class="articleMenu transform transition-all translate-y-full absolute top-0 left-0 h-full w-full bg-black bg-opacity-70 flex items-center justify-center">
+                <button class="toggleArticleMenu outline-none focus:outline-none text-gray-200 hover:text-pink-600 absolute top-4 right-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <a href="/edit/<%= article.id %>" class="outline-none focus:outline-none text-white mx-2 hover:scale-110 transform transition-all">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                </a>
+                <a href="/delete/<%= article.id %>" class="outline-none focus:outline-none text-white mx-2 hover:scale-110 transform transition-all">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                </a>
+            </div>
+        </article>
+        <% } %>
+
+    </section> 
+    <% } else { %>
+        <h2 class="text-xl mt-4 mx-auto w-max text-gray-300 font-light capitalize">
+            you have no tasks left
+        </h2>
+    <% } %>
+    
+<%- include('../partials/footer') %>
+</body>
+</html>
