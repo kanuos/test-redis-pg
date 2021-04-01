@@ -31,7 +31,7 @@ async function initDB(){
         // create todo-user relation
         await pool.query(`CREATE TABLE IF NOT EXISTS todo_user (
             u_id BIGSERIAL NOT NULL REFERENCES users(uid),
-            t_id BIGSERIAL NOT NULL REFERENCES todos(tid),
+            t_id BIGSERIAL NOT NULL REFERENCES todos(tid) ON DELETE CASCADE,
             PRIMARY KEY (u_id, t_id)
             );`)
         console.log("todo_user Table creted");
