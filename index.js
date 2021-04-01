@@ -38,10 +38,10 @@ app.use(session({
         httpOnly : true,
         sameSite : true
     },
-    // store: new RedisStore({
-    //     client : redisClient,
-    //     url : process.env.REDIS_URL || null
-    // })
+    store: new RedisStore({
+        client : redisClient,
+        url : process.env.REDIS_URL ?? null
+    })
 }))
 
 app.use("/", loginRouter)
