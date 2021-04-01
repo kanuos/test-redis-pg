@@ -7,6 +7,8 @@ const session = require("express-session");
 const favicon = require("express-favicon");
 const path = require("path");
 const compression = require("compression");
+const redisClient = require("redis").createClient();
+const RedisStore = require("connect-redis")(session);
 
 // creating the app 
 const app = express();
@@ -32,10 +34,13 @@ app.use(session({
     resave : false,
     saveUninitialized : false,
     cookie : {
+        maxAge : 60 * 1000,
         httpOnly : true,
         sameSite : true
     },
-    // store: {}
+    store: new RedisStore({
+        client : redisClient
+    })
 }))
 
 app.use("/", loginRouter)
