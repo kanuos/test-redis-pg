@@ -48,4 +48,4 @@ app.use("/", loginRouter)
 app.use("/api", privateRoute ,apiRouter)
 
 
-app.listen(3000)
+app.listen(process.env.PORT)

@@ -1,7 +1,10 @@
 const {Pool} = require("pg");
 
 const pool = new Pool({
-    connectionString : process.env.DATABASE_URL
+    connectionString : process.env.DATABASE_URL,
+    ssl : {
+        rejectUnauthorized : false
+    }
 })
 
 async function initDB(){
@@ -15,7 +18,6 @@ async function initDB(){
                 name TEXT NOT NULL,
                 username TEXT NOT NULL UNIQUE,
                 password TEXT NOT NULL);`);
-        console.log("usertable created");
         // create todo table
         await pool.query(`
                 CREATE TABLE IF NOT EXISTS todos (
@@ -23,14 +25,12 @@ async function initDB(){
                     title VARCHAR(150) NOT NULL,
                     content TEXT NOT NULL,
                     timestamp DATE DEFAULT CURRENT_DATE);`)
-        console.log("todoTable creted");
         // create todo-user relation
         await pool.query(`CREATE TABLE IF NOT EXISTS todo_user (
             u_id BIGSERIAL NOT NULL REFERENCES users(uid),
             t_id BIGSERIAL NOT NULL REFERENCES todos(tid) ON DELETE CASCADE,
             PRIMARY KEY (u_id, t_id)
             );`)
-        console.log("todo_user Table creted");
     }
     catch(err){
         console.log(err);
