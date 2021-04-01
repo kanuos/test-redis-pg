@@ -7,7 +7,7 @@ const session = require("express-session");
 const favicon = require("express-favicon");
 const path = require("path");
 const compression = require("compression");
-const redisClient = require("redis").createClient();
+const redisClient = require("redis").createClient(process.env.REDIS_URL);
 const RedisStore = require("connect-redis")(session);
 
 // creating the app 
