@@ -39,7 +39,8 @@ app.use(session({
         sameSite : true
     },
     store: new RedisStore({
-        client : redisClient
+        client : redisClient,
+        url : process.env.REDIS_URL
     })
 }))
 
