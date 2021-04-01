@@ -93,7 +93,6 @@ exports.editPost = async function(req, res) {
 exports.deletePost = async function(req, res) {
     const {id} = req.params;
     const userID = req.session.activeUser.id;
-    console.log(`delete todo #${id} by author #${userID}`);
     try {
         await pool.query(`DELETE FROM todos WHERE tid = (SELECT tid FROM todos INNER JOIN todo_user ON todos.tid = todo_user.t_id  WHERE tid = $1 AND todo_user.u_id = $2)` , [id, userID])
         return res.redirect(302, "/api")
