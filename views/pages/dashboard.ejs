@@ -6,7 +6,15 @@
             <span class="ml-1">logout</span>
         </a>
     </nav>
-    <form action="/api" method="post" class="mt-6 mb-2 w-5/6 mx-auto max-w-xl" autocomplete="off">
+    <form 
+        <% if (url) {%>
+            action="<%= url %>"
+        <% } else {%>
+            action="/api"
+        <% } %>
+        method="post" 
+        class="mt-6 mb-2 w-5/6 mx-auto max-w-xl" 
+        autocomplete="off">
         <h1 class="text-2xl uppercase font-light text-white text-center">
             write todo
         </h1>
@@ -22,6 +30,7 @@
                 type="text" 
                 autocomplete="off"
                 name="title" 
+                value="<%= todoTitle %>"
                 id="title">
         </section>
         <section class="flex flex-col my-2">
@@ -36,7 +45,7 @@
                 autocomplete="off"
                 maxlength="300"
                 name="content" 
-                id="content"></textarea>
+                id="content"><%= todoContent %></textarea>
         </section>
         <section class="flex items-center justify-center">
             <button type="submit" class="my-4 p-3 w-1/2 max-w-xs text-white font-semibold uppercase text-xs bg-black tracking-wider outline-none focus:outline-none shadow hover:shadow-lg transition-all hover-translate-y-px hover:bg-white hover:text-black rounded-sm flex items-center justify-center">
@@ -51,9 +60,9 @@
     <h2 class="text-xl mt-4 border-b border-gray-100 mx-auto w-max text-gray-200 font-light capitalize">
         my tasks (<%= articles.length %>)
     </h2>
-    <% if (err) {%>
+    <% if (error) {%>
     <small class="text-xs block text-center capitalize my-1 text-white">
-        <%= err %>
+        <%= error %>
     </small>
     <% } %>
     <section class="w-5/6 mx-auto pb-8 grid grid-cols-1 md:w-11/12 md:justify-start lg:grid-cols-2 xl:grid-cols-3">
@@ -76,11 +85,11 @@
             </section>
             
             <section class="row-span-end py-2 w-full flex items-center justify-end bg-white">
-                <form action="/api/edit/<%= article.tid %>" method="POST">
+                <form action="/api/edit/<%= article.tid %>" method="GET">
                     <button type="submit" class="outline-none focus:outline-none text-pink-600 mx-2 hover:scale-110 transform transition-all">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     </button>
-                </a>
+                </form>
                 <form action="/api/delete/<%= article.tid %>" method="POST">
                     <button type="submit" class="outline-none focus:outline-none text-pink-600 mx-2 hover:scale-110 transform transition-all">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>

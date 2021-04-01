@@ -3,12 +3,15 @@ const {
     getDashboard, 
     newPost,
     editPost,
-    deletePost
+    deletePost,
+    getEditPage
 } = require("../controller/api")
 
 apiRoutes.get("/", getDashboard)
 
 apiRoutes.post("/", newPost)
+
+apiRoutes.get("/edit/:id", getEditPage)
 
 apiRoutes.post("/edit/:id", editPost)
 

@@ -44,7 +44,6 @@ exports.submitLoginData = async function(req, res) {
             id : user.uid,
             username : user.username
         }
-        console.log(req.session);
         return res.redirect("/api");
     }
     catch(err) {

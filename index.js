@@ -5,7 +5,8 @@ require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
 const favicon = require("express-favicon");
-const path = require("path")
+const path = require("path");
+const compression = require("compression");
 
 // creating the app 
 const app = express();
@@ -16,9 +17,11 @@ require("./database");
 
 const loginRouter = require("./routes/loginRoutes")
 const apiRouter = require("./routes/apiRoutes")
+const { privateRoute } = require("./sessionMiddleware");
 
 app.set("views", "views")
 app.set("view engine", "ejs")
+app.use(compression())
 app.use(favicon(__dirname + "/static/icon.png"))
 app.use(express.static(path.join(__dirname, "static")))
 app.use(express.json())
@@ -36,7 +39,7 @@ app.use(session({
 }))
 
 app.use("/", loginRouter)
-app.use("/api", apiRouter)
+app.use("/api", privateRoute ,apiRouter)
 
 
 app.listen(3000)

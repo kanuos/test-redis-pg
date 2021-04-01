@@ -7,7 +7,10 @@ exports.getDashboard = async function(req, res) {
         const options = {
             title : "My To-Do | Dashboard",
             articles : todos,
-            err : todos.length !== 0 ? null : "no todos found by user"
+            todoTitle : "",
+            todoContent : '',
+            error : todos.length !== 0 ? null : "no todos found by user",
+            url : undefined
         }
         return res.render("pages/dashboard", options)
     }
@@ -45,20 +48,61 @@ exports.newPost = async function(req, res) {
         const options = {
             title : "My To-Do | Dashboard",
             articles : todos,
-            err : err.message
+            error : err.message,
+            todoTitle : "",
+            todoContent : '',
+            url : undefined
         }
         return res.render("pages/dashboard", options)
     }
 }
 
-exports.editPost = function(req, res) {
-
+exports.getEditPage = async function(req, res) {
+    const {id} = req.params;
+    try {
+        const rows = await getActiveUserToDos(req.session.activeUser.id);
+        const article = rows?.find(row => row.tid === id);
+        const options = {
+            title : "My To-Do | Dashboard",
+            articles : rows,
+            todoTitle : article.title,
+            todoContent : article.content,
+            error : rows.length !== 0 ? null : "no todos found by user",
+            url : `/api/edit/${article.tid}`
+        }
+        return res.render("pages/dashboard", options)
+    }
+    catch(err) {
+        console.log(err);
+        return res.redirect("/api")
+    }
 }
 
-exports.deletePost = function(req, res) {
-
+exports.editPost = async function(req, res) {
+    try {
+        const {title, content} = req.body;
+        await pool.query(`UPDATE todos SET title = $1, content = $2 WHERE tid = $3`, [title, content, req.params.id]);
+        return res.redirect("/api");
+    }
+    catch(err){
+        console.log(err);
+        return res.redirect("/api");
+    }
 }
 
+exports.deletePost = async function(req, res) {
+    const {id} = req.params;
+    const userID = req.session.activeUser.id;
+    console.log(`delete todo #${id} by author #${userID}`);
+    try {
+        await pool.query(`DELETE FROM todos WHERE tid = (SELECT tid FROM todos INNER JOIN todo_user ON todos.tid = todo_user.t_id  WHERE tid = $1 AND todo_user.u_id = $2)` , [id, userID])
+        return res.redirect(302, "/api")
+    }
+    catch(err) {
+        console.log(err);
+        return res.status(400).json(err);
+    }
+}
 
 async function getActiveUserToDos(id){
     try {
@@ -69,10 +113,9 @@ async function getActiveUserToDos(id){
         return rows;
     }
     catch(err){
-        console.log(err.message);
+        return [];
     }
 }
-
 
 function timestampToDateString(date){
     return new Date(date)?.toDateString();

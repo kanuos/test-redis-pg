@@ -6,16 +6,17 @@ const {
     submitRegisterData,
     logout
 } = require("../controller/login")
+const  { onlyPublicRoute, privateRoute } = require("../sessionMiddleware")
 
-accountRoutes.get("/", getLoginForm)
+accountRoutes.get("/",onlyPublicRoute, getLoginForm)
 
-accountRoutes.get("/register", getRegisterForm)
+accountRoutes.get("/register",onlyPublicRoute, getRegisterForm)
 
-accountRoutes.post("/login", submitLoginData)
+accountRoutes.post("/login",onlyPublicRoute, submitLoginData)
 
-accountRoutes.post("/register", submitRegisterData)
+accountRoutes.post("/register", onlyPublicRoute, submitRegisterData)
 
-accountRoutes.get("/logout", logout)
+accountRoutes.get("/logout", privateRoute, logout)
 
 
 
