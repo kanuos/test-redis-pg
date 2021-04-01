@@ -28,6 +28,13 @@ async function initDB(){
                     content TEXT NOT NULL,
                     timestamp DATE DEFAULT CURRENT_DATE);`)
         console.log("todoTable creted");
+        // create todo-user relation
+        await pool.query(`CREATE TABLE IF NOT EXISTS todo_user (
+            u_id BIGSERIAL NOT NULL REFERENCES users(uid),
+            t_id BIGSERIAL NOT NULL REFERENCES todos(tid),
+            PRIMARY KEY (u_id, t_id)
+            );`)
+        console.log("todo_user Table creted");
     }
     catch(err){
         console.log(err);
